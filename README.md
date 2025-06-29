@@ -1,3 +1,3 @@
 # InforSystem
 
-[* simulation_gravity.html](../../pages/simulation_gravity.html)
+[*simulation_gravity.html](../../pages/doc/simulation_gravity.html)
