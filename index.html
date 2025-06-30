@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>天体公転シミュレーション</title>
+  <style>
+    body { margin: 0; overflow: hidden; }
+    canvas { display: block; }
+  </style>
+</head>
+<body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/loaders/GLTFLoader.js"></script>
+  <script>
+    let scene, camera, renderer, loader;
+    let bigSphere, smallSphere;
+    let rotationSpeed = 0.01; // 軌道の回転速度
+
+    // シーン、カメラ、レンダラーの設定
+    scene = new THREE.Scene();
+    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    // GLTFローダーを作成
+    loader = new THREE.GLTFLoader();
+
+    // 大きい球体と小さい球体を読み込む
+    loader.load('doc/sun.glb', function (gltf) {
+      bigSphere = gltf.scene;
+      bigSphere.scale.set(3, 3, 3); // 大きさ調整
+      scene.add(bigSphere);
+    });
+
+    loader.load('doc/earth.glb', function (gltf) {
+      smallSphere = gltf.scene;
+      smallSphere.scale.set(0.5, 0.5, 0.5); // 大きさ調整
+      scene.add(smallSphere);
+    });
+
+    // カメラ位置の設定
+    camera.position.z = 10;
+
+    // アニメーション関数
+    function animate() {
+      requestAnimationFrame(animate);
+
+      // 小さい球体を大きい球体の周りで回転させる
+      if (bigSphere && smallSphere) {
+        let time = Date.now() * 0.001; // 時間を取得
+        smallSphere.position.x = Math.cos(time * rotationSpeed) * 5; // 半径5の円軌道
+        smallSphere.position.z = Math.sin(time * rotationSpeed) * 5; // 半径5の円軌道
+      }
+
+      renderer.render(scene, camera);
+    }
+
+    animate();
+  </script>
+</body>
+</html>
